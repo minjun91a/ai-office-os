@@ -28,3 +28,7 @@ Thumbs.db
 node_modules/
 dist/
 build/
+
+# Uploaded files
+backend/uploads/*
+!backend/uploads/.gitkeep
