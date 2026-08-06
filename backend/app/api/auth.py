@@ -7,6 +7,7 @@ from app.core.security import create_access_token, hash_password, verify_passwor
 from app.models.user import User
 from app.schemas.token import Token
 from app.schemas.user import UserCreate, UserOut
+from app.api.deps import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -42,3 +43,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
     access_token = create_access_token(subject=str(user.id))
     return Token(access_token=access_token)
+
+@router.get("/me", response_model=UserOut)
+def read_me(current_user: User = Depends(get_current_user)):
+    return current_user
