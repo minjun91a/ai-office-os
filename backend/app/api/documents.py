@@ -64,3 +64,18 @@ def list_documents(
     current_user: User = Depends(get_current_user),
 ):
     return db.query(Document).filter(Document.owner_id == current_user.id).all()
+
+@router.get("/{document_id}", response_model=DocumentOut)
+def get_ducument(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    document = (
+        db.query(Document)
+        .filter(Document.id == document_id, Document.owner_id == current_user.id)
+        .first()
+    )
+    if document is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found")
+    return document
