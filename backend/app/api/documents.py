@@ -57,3 +57,10 @@ def upload_document(
     db.commit()
     db.refresh(document)
     return document
+
+@router.get("", response_model=list[DocumentOut])
+def list_documents(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return db.query(Document).filter(Document.owner_id == current_user.id).all()
