@@ -43,3 +43,4 @@ http://127.0.0.1:8000/docs
 - [x] Phase 1: 로그인 시스템
 - [x] Phase 2: 문서 관리
 - [x] Phase 3: RAG 문서 검색
+- [x] Phase 4: AI 문서 분석

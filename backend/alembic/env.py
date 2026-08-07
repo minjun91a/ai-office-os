@@ -13,6 +13,7 @@ load_dotenv()
 from app.core.database import Base # noqa: E402
 from app.models.user import User # noqa: E402,F401
 from app.models.document import Document # noqa: E402,F401
+from app.models.document_analysis import DocumentAnalysis # noqa: E402,F401
 
 config = context.config
 
