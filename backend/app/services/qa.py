@@ -26,4 +26,9 @@ def generate_answer(question: str, context_chunks: list[str]) -> str:
         max_tokens=1024,
         messages=[{"role": "user", "content": prompt}],
     )
-    return response.content[0].text
+
+    for block in response.content:
+        if block.type == "text":
+            return block.text
+
+    return "답변을 생성하지 못했습니다."
