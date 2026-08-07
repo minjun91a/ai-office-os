@@ -10,16 +10,20 @@ from app.core.database import get_db
 from app.models.document import Document
 from app.models.user import User
 from app.schemas.document import DocumentOut
+from app.services.extraction import extract_text
+from app.services.vectorstore import add_chunks, delete_document_chunks
+from app.services.chunking import chunk_text
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
 UPLOAD_DIR = Path(__file__).resolve().parent.parent.parent / "uploads"
-MAX_FILE_SIZE = 10 * 1024 * 1024 # 10MB
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
 ALLOWED_CONTENT_TYPES = {
     "application/pdf": ".pdf",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document": ".docx",
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
 }
+
 
 @router.post("", response_model=DocumentOut, status_code=status.HTTP_201_CREATED)
 def upload_document(
@@ -57,7 +61,13 @@ def upload_document(
     db.add(document)
     db.commit()
     db.refresh(document)
+    
+    text = extract_text(UPLOAD_DIR / stored_filename, file.content_type)
+    chunks = chunk_text(text)
+    add_chunks(document.id, chunks)
+
     return document
+
 
 @router.get("", response_model=list[DocumentOut])
 def list_documents(
@@ -65,6 +75,7 @@ def list_documents(
     current_user: User = Depends(get_current_user),
 ):
     return db.query(Document).filter(Document.owner_id == current_user.id).all()
+
 
 @router.get("/{document_id}", response_model=DocumentOut)
 def get_ducument(
@@ -78,8 +89,11 @@ def get_ducument(
         .first()
     )
     if document is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
+        )
     return document
+
 
 @router.get("/{document_id}/download")
 def download_document(
@@ -93,17 +107,22 @@ def download_document(
         .first()
     )
     if document is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
+        )
 
     file_path = UPLOAD_DIR / document.stored_filename
     if not file_path.exists():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="File not found on disk")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="File not found on disk"
+        )
 
     return FileResponse(
         path=file_path,
         filename=document.filename,
         media_type=document.content_type,
     )
+
 
 @router.delete("/{document_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_document(
@@ -117,11 +136,15 @@ def delete_document(
         .first()
     )
     if document is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
+        )
 
     file_path = UPLOAD_DIR / document.stored_filename
     if file_path.exists():
         file_path.unlink()
+
+    delete_document_chunks(document_id)
 
     db.delete(document)
     db.commit()
