@@ -30,3 +30,15 @@ def add_chunks(document_id: int, chunks: list[str]) -> None:
 
 def delete_document_chunks(document_id: int) -> None:
     _collection.delete(where={"document_id": document_id})
+
+
+def search(query_text: str, document_ids: list[int], top_k: int = 5) -> dict:
+    if not document_ids:
+        return {"documents": [[]], "metadatas": [[]], "distances": [[]]}
+
+    query_embedding = embed_texts([query_text])[0]
+    return _collection.query(
+        query_embeddings=[query_embedding],
+        n_results=top_k,
+        where={"document_id": {"$in": document_ids}},
+    )
