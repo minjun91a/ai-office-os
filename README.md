@@ -45,3 +45,4 @@ http://127.0.0.1:8000/docs
 - [x] Phase 3: RAG 문서 검색
 - [x] Phase 4: AI 문서 분석
 - [x] Phase 5: 보고서 생성
+- [x] Phase 6: AI 이메일 작성
