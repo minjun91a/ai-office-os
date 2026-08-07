@@ -16,7 +16,8 @@
 
 - Backend: Python, FastAPI
 - Database: PostgreSQL
-- AI: Anthropic Claude (답변 생성/요약/Agent), OpenAI Embeddings (RAG 벡터 검색)
+- AI: Anthropic Claude (답변 생성/요약/Agent), sentence-transformers 로컬 임베딩 (RAG 벡터 검색)
+- Vector DB: ChromaDB
 - Frontend: React, TypeScript
 - Infra: Docker, GitHub Actions, AWS
 
@@ -39,5 +40,6 @@ http://127.0.0.1:8000/docs
 52주 로드맵 기준 개발 중입니다. 전체 계획은 [`docs/roadmap.md`](docs/roadmap.md) 참고.
 
 - [x] Phase 0: 개발 환경 구축
-- [ ] Phase 1: 로그인 시스템
-- [ ] Phase 2: 문서 관리
+- [x] Phase 1: 로그인 시스템
+- [x] Phase 2: 문서 관리
+- [ ] Phase 3: RAG 문서 검색
