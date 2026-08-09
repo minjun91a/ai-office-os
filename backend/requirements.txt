@@ -121,3 +121,7 @@ watchfiles==1.2.0
 websocket-client==1.9.0
 websockets==17.0.1
 yarl==1.24.5
+langgraph==1.2.10
+langgraph-checkpoint==4.2.0
+langgraph-prebuilt==1.1.0
+langgraph-sdk==0.4.2

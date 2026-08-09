@@ -18,6 +18,7 @@
 - Database: PostgreSQL
 - AI: Anthropic Claude (답변 생성/요약/Agent), sentence-transformers 로컬 임베딩 (RAG 벡터 검색)
 - Vector DB: ChromaDB
+- Agent: LangGraph (Plan → Execute → Finish/Fail 워크플로우)
 - Frontend: React, TypeScript
 - Infra: Docker, GitHub Actions, AWS
 
@@ -46,3 +47,4 @@ http://127.0.0.1:8000/docs
 - [x] Phase 4: AI 문서 분석
 - [x] Phase 5: 보고서 생성
 - [x] Phase 6: AI 이메일 작성
+- [x] Phase 7: AI Agent
