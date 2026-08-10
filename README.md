@@ -20,6 +20,7 @@
 - Vector DB: ChromaDB
 - Agent: LangGraph (Plan → Execute → Finish/Fail 워크플로우)
 - 외부 연동: Gmail API (OAuth 2.0, 초안 자동 생성)
+- 운영/관리: 멀티테넌트(Organization) 구조, role 기반 접근 제어(user/admin/superadmin), API 요청 로깅 미들웨어
 - Frontend: React, TypeScript
 - Infra: Docker, GitHub Actions, AWS
 
@@ -50,3 +51,4 @@ http://127.0.0.1:8000/docs
 - [x] Phase 6: AI 이메일 작성
 - [x] Phase 7: AI Agent
 - [x] Phase 8: 외부 서비스 연동 (Gmail)
+- [x] Phase 9: 관리자 페이지 (사용자/조직 관리, 사용량 통계, 에러 로그)

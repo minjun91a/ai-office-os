@@ -7,8 +7,11 @@ from app.api.report import router as report_router
 from app.api.email import router as email_router
 from app.api.agent import router as agent_router
 from app.api.gmail import router as gmail_router
+from app.core.logging_middleware import ApiLogMiddleware
+from app.api.admin import router as admin_router
 
 app = FastAPI(title="AI Office OS API")
+app.add_middleware(ApiLogMiddleware)
 app.include_router(auth_router)
 app.include_router(documents_router)
 app.include_router(qa_router)
@@ -17,6 +20,7 @@ app.include_router(report_router)
 app.include_router(email_router)
 app.include_router(agent_router)
 app.include_router(gmail_router)
+app.include_router(admin_router)
 
 @app.get("/")
 def read_root() -> dict[str, str]:

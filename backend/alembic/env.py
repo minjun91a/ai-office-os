@@ -16,6 +16,9 @@ from app.models.document import Document # noqa: E402,F401
 from app.models.document_analysis import DocumentAnalysis # noqa: E402,F401
 from app.models.report import Report # noqa: E402,F401
 from app.models.google_credential import GoogleCredential # noqa: E402,F401
+from app.models.organization import Organization # noqa: E402,F401
+from app.models.api_log import ApiLog # noqa: E402,F401
+
 
 config = context.config
 
