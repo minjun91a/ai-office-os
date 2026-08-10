@@ -19,6 +19,7 @@
 - AI: Anthropic Claude (답변 생성/요약/Agent), sentence-transformers 로컬 임베딩 (RAG 벡터 검색)
 - Vector DB: ChromaDB
 - Agent: LangGraph (Plan → Execute → Finish/Fail 워크플로우)
+- 외부 연동: Gmail API (OAuth 2.0, 초안 자동 생성)
 - Frontend: React, TypeScript
 - Infra: Docker, GitHub Actions, AWS
 
@@ -48,3 +49,4 @@ http://127.0.0.1:8000/docs
 - [x] Phase 5: 보고서 생성
 - [x] Phase 6: AI 이메일 작성
 - [x] Phase 7: AI Agent
+- [x] Phase 8: 외부 서비스 연동 (Gmail)

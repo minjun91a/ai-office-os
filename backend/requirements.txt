@@ -125,3 +125,6 @@ langgraph==1.2.10
 langgraph-checkpoint==4.2.0
 langgraph-prebuilt==1.1.0
 langgraph-sdk==0.4.2
+google-auth==2.56.3
+google-auth-oauthlib==1.4.0
+google-api-python-client==2.198.0
