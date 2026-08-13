@@ -1,7 +1,12 @@
+import os
+
 import chromadb
 from sentence_transformers import SentenceTransformer
 
-_client = chromadb.HttpClient(host="localhost", port=8001)
+_client = chromadb.HttpClient(
+    host=os.getenv("CHROMA_HOST", "localhost"), 
+    port=int(os.getenv("CHROMA_PORT", "8001")),
+)
 _collection = _client.get_or_create_collection(name="documents")
 
 _embedding_model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")

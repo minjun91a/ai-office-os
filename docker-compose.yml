@@ -1,17 +1,19 @@
 services:
   api:
-    image: python:3.14-slim
-    working_dir: /app
-    volumes:
-      - ./backend:/app
-    command: bash -lc "pip install -r requirements.txt && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     depends_on:
       - db
       - chroma
+    env_file:
+      - ./backend/.env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      CHROMA_HOST: chroma
+      CHROMA_PORT: "8000"
 
   db:
     image: postgres:17-alpine
