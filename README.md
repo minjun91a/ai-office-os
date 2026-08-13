@@ -1,5 +1,7 @@
 # AI Office OS
 
+![CI](https://github.com/minjun91a/ai-office-os/actions/workflows/ci.yml/badge.svg)
+
 기업용 AI 업무 비서 플랫폼 포트폴리오 프로젝트입니다.
 
 ## 목표
@@ -34,6 +36,13 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
+### Docker로 실행
+
+```bash
+docker compose up -d
+```
+`db`(PostgreSQL), `chroma`(ChromaDB), `api`(FastAPI) 3개 컨테이너가 한 번에 뜹니다.
+
 ## API 문서
 
 http://127.0.0.1:8000/docs
@@ -52,3 +61,4 @@ http://127.0.0.1:8000/docs
 - [x] Phase 7: AI Agent
 - [x] Phase 8: 외부 서비스 연동 (Gmail)
 - [x] Phase 9: 관리자 페이지 (사용자/조직 관리, 사용량 통계, 에러 로그)
+- [ ] Phase 10: 배포와 운영 (Docker Compose + GitHub Actions CI 완료, AWS 배포 진행 중)
