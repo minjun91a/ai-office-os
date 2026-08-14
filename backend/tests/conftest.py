@@ -9,9 +9,8 @@ os.environ.setdefault("CHROMA_PORT", "8001")
 import pytest
 from fastapi.testclient import TestClient
 
-from app.core.database import Base, engine
+from app.core.database import Base, engine, SessionLocal
 from app.main import app
-
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_database():
@@ -23,3 +22,12 @@ def setup_database():
 @pytest.fixture()
 def client():
     return TestClient(app)
+
+
+@pytest.fixture()
+def db_session():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

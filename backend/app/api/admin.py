@@ -19,6 +19,8 @@ from app.schemas.admin import (
     ErrorLogOut,
     OrganizationUsageOut,
 )
+from app.models.cross_check import CrossCheck
+from app.models.qa_log import QaLog
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -215,3 +217,14 @@ def organization_usage_stats(
         results.append(_usage_row(None, "미배정"))
 
     return results
+
+@router.get("/stats/erp-cross-checks")
+def erp_cross_check_stats(db: Session = Depends(get_db), current_user: User = Depends(require_admin)):
+    query = (
+        db.query(CrossCheck.verdict, func.count(CrossCheck.id))
+        .join(QaLog, CrossCheck.qa_log_id == QaLog.id)
+    )
+    if current_user.role != "superadmin":
+        query = query.filter(QaLog.organization_id == current_user.organization_id)
+    counts = query.group_by(CrossCheck.verdict).all()
+    return {verdict: count for verdict, count in counts}

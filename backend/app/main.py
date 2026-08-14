@@ -9,6 +9,7 @@ from app.api.agent import router as agent_router
 from app.api.gmail import router as gmail_router
 from app.core.logging_middleware import ApiLogMiddleware
 from app.api.admin import router as admin_router
+from app.core.erp_config import is_erp_enabled
 
 app = FastAPI(title="AI Office OS API")
 app.add_middleware(ApiLogMiddleware)
@@ -30,3 +31,7 @@ def read_root() -> dict[str, str]:
 @app.get("/health")
 def health_check() -> dict[str, str]:
     return {"status": "ok"}
+
+if is_erp_enabled():
+    from app.api.erp import router as erp_router
+    app.include_router(erp_router)

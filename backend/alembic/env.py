@@ -18,6 +18,15 @@ from app.models.report import Report # noqa: E402,F401
 from app.models.google_credential import GoogleCredential # noqa: E402,F401
 from app.models.organization import Organization # noqa: E402,F401
 from app.models.api_log import ApiLog # noqa: E402,F401
+from app.models.qa_log import QaLog # noqa: E402,F401
+from app.models.cross_check import CrossCheck # noqa: E402,F401
+from app.models.erp_material import ErpMaterial # noqa: E402,F401
+from app.models.erp_stock_snapshot import ErpStockSnapshot # noqa: E402,F401
+from app.models.erp_bom import ErpBom # noqa: E402,F401
+from app.models.erp_inbound_schedule import ErpInboundSchedule # noqa: E402,F401
+from app.models.erp_production_plan import ErpProductionPlan # noqa: E402,F401
+from app.models.erp_shipment_plan import ErpShipmentPlan # noqa: E402,F401
+
 
 
 config = context.config
