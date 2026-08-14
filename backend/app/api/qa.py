@@ -1,15 +1,20 @@
+import logging
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
 from app.core.database import get_db
+from app.core.erp_config import is_cross_check_enabled
 from app.models.document import Document
 from app.models.user import User
 from app.schemas.qa import AnswerOut, QuestionIn, SourceOut
 from app.services.qa import generate_answer
+from app.services.trust.cross_validator import run_cross_check
 from app.services.vectorstore import search
 
 router = APIRouter(prefix="/qa", tags=["qa"])
+logger = logging.getLogger(__name__)
 
 
 @router.post("/ask", response_model=AnswerOut)
@@ -38,4 +43,12 @@ def ask_question(
         for chunk, meta in zip(chunks, metadatas)
     ]
 
-    return AnswerOut(answer=answer, sources=sources)
+    result = AnswerOut(answer=answer, sources=sources)
+
+    if is_cross_check_enabled():
+        try:
+            result = run_cross_check(db=db, user=current_user, question=question_in.question, result=result)
+        except Exception:
+            logger.warning("ERP cross-check failed", exc_info=True)
+
+    return result
