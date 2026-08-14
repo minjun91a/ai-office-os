@@ -35,3 +35,21 @@ class ErpInboundScheduleOut(BaseModel):
 class ErpSyncResult(BaseModel):
     status: str
     detail: str
+
+
+class ProductionOrderChange(BaseModel):
+    start_date: datetime | None = None
+    end_date: datetime | None = None
+    status: str | None = None
+
+
+class FieldDiff(BaseModel):
+    field: str
+    before: str | None
+    after: str | None
+
+
+class ProductionOrderDiffOut(BaseModel):
+    wo_no: str
+    diffs: list[FieldDiff]
+    applied: bool

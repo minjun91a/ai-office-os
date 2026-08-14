@@ -10,6 +10,10 @@ from app.models.user import User
 from app.schemas.erp import ErpBomNodeOut, ErpInboundScheduleOut, ErpMaterialOut, ErpSyncResult
 from app.services.erp.repository import get_latest_stock
 from app.services.erp.service import coverage_weeks
+from app.schemas.erp import ProductionOrderChange, ProductionOrderDiffOut
+from app.services.agent.approval import requires_manual_approval
+from app.services.erp.write import apply_changes, get_production_order, preview_diff
+
 
 router = APIRouter(prefix="/erp", tags=["erp"])
 
@@ -126,3 +130,38 @@ def sync_erp(current_user: User = Depends(require_admin)):
         status="not_implemented",
         detail="실제 외부 ERP 연동이 없습니다. 데모 데이터는 scripts/seed_erp.py로 채워주세요.",
     )
+
+@router.post("/production-orders/{wo_no}/propose", response_model=ProductionOrderDiffOut)
+def propose_production_order_change(
+    wo_no: str,
+    change_in: ProductionOrderChange,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin),
+):
+    organization_id = _scoped_organization_id(current_user)
+    order = get_production_order(db, organization_id, wo_no)
+    if order is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Production order not found")
+
+    diffs = preview_diff(order, change_in)
+    return ProductionOrderDiffOut(wo_no=wo_no, diffs=diffs, applied=False)
+
+
+@router.post("/production-orders/{wo_no}/approve", response_model=ProductionOrderDiffOut)
+def approve_production_order_change(
+    wo_no: str,
+    change_in: ProductionOrderChange,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin),
+):
+    if not requires_manual_approval("erp_update_production_order"):
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Approval gate misconfigured")
+
+    organization_id = _scoped_organization_id(current_user)
+    order = get_production_order(db, organization_id, wo_no)
+    if order is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Production order not found")
+
+    diffs = preview_diff(order, change_in)
+    apply_changes(db, order, change_in)
+    return ProductionOrderDiffOut(wo_no=wo_no, diffs=diffs, applied=True)
